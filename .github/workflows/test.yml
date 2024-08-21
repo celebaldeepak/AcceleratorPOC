@@ -1,24 +1,14 @@
-name: Simple Test Pipeline
+name: Simple Pipeline
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  example-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          pip install some-package
-
-      - name: Run tests
-        run: |
-          pytest
+      - name: Run a simple command
+        run: echo "Hello, World!"
