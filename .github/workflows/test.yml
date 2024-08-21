@@ -1,14 +1,33 @@
-name: Simple Pipeline
+name: Azure Test Pipeline
 
 on: [push, pull_request]
 
 jobs:
-  example-job:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run a simple command
-        run: echo "Hello, World!"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pytest
+
+      - name: Azure CLI setup
+        uses: azure/setup-azure-cli@v1
+        with:
+          azure-cli-version: '2.40.0'  # Use the latest version if needed
+
+      - name: Log in to Azure
+        run: |
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Run tests
+        run: |
+          pytest
